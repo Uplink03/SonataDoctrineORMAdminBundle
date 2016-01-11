@@ -23,7 +23,7 @@ This code manage the one-to-many association field popup
 <script type="text/javascript">
 
     // handle the add link
-    var field_add_{{ id }} = function(event) {
+    var field_add_{{ id }}{% if subclass is not empty %}_{{ subclass }}{% endif %} = function(event) {
 
         event.preventDefault();
         event.stopPropagation();
@@ -37,7 +37,7 @@ This code manage the one-to-many association field popup
                 'elementId': id,
                 'objectId':  sonata_admin.admin.root.id(sonata_admin.admin.root.subject),
                 'uniqid':    sonata_admin.admin.root.uniqid,
-                'subclass': app.request.query.get('subclass'),
+                'subclass':  subclass | default(app.request.query.get('subclass')),
             } + sonata_admin.field_description.getOption('link_parameters', {})) }}',
             type: "POST",
             dataType: 'html',
@@ -67,7 +67,7 @@ This code manage the one-to-many association field popup
 
     // this function initialize the popup
     // this can be only done this way has popup can be cascaded
-    function start_field_retrieve_{{ id }}(link) {
+    function start_field_retrieve_{{ id }}{% if subclass is not empty %}_{{ subclass }}{% endif %}(link) {
 
         link.onclick = null;
 
@@ -76,7 +76,7 @@ This code manage the one-to-many association field popup
 
         // add the jQuery event to the a element
         jQuery(link)
-            .click(field_add_{{ id }})
+            .click(field_add_{{ id }}{% if subclass is not empty %}_{{ subclass }}{% endif %})
             .trigger('click')
         ;
 

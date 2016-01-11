@@ -119,9 +119,11 @@ file that was distributed with this source code.
         </span>
 
         {% if sonata_admin.edit == 'inline' %}
+            {% set association_included = false %}
 
             {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') and btn_add %}
                 <span id="field_actions_{{ id }}" >
+                    {% if sonata_admin.field_description.associationadmin is empty %}
                     <a
                         href="{{ sonata_admin.field_description.associationadmin.generateUrl('create', sonata_admin.field_description.getOption('link_parameters', {})) }}"
                         onclick="return start_field_retrieve_{{ id }}(this);"
@@ -131,6 +133,32 @@ file that was distributed with this source code.
                         <i class="fa fa-plus-circle"></i>
                         {{ btn_add|trans({}, btn_catalogue) }}
                     </a>
+                    {% else %}
+                    <a
+                        href="#"
+                        class="btn btn-success btn-sm sonata-ba-action dropdown-toggle"
+                        data-toggle="dropdown"
+                        title="{{ btn_add|trans({}, btn_catalogue) }}"
+                        >
+                        <i class="fa fa-plus-circle"></i>
+                        {{ btn_add|trans({}, btn_catalogue) }}
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% for subclass in sonata_admin.field_description.associationadmin.subclasses|keys %}
+                        <li>
+                            <a
+                                href="{{ sonata_admin.field_description.associationadmin.generateUrl('create', sonata_admin.field_description.getOption('link_parameters', {})|merge({'subclass': subclass})) }}"
+                                onclick="return start_field_retrieve_{{ id }}_{{ subclass }}(this);"
+                            >
+                                {{ subclass|trans({}, sonata_admin.field_description.associationadmin.translationdomain) }}
+                            </a>
+                        </li>
+                        {% include 'SonataDoctrineORMAdminBundle:CRUD:edit_orm_one_association_script.html.twig' with {'subclass': subclass} %}
+                        {% endfor %}
+                        {% set association_included = true %}
+                    </ul>
+                    {% endif %}
                 </span>
             {% endif %}
 
@@ -204,7 +232,9 @@ file that was distributed with this source code.
             {% endif %}
 
             {# include association code #}
+            {% if not association_included %}
             {% include 'SonataDoctrineORMAdminBundle:CRUD:edit_orm_one_association_script.html.twig' %}
+            {% endif %}
 
         {% else %}
             <span id="field_actions_{{ id }}" >
