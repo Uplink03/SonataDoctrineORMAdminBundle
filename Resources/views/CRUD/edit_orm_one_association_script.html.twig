@@ -18,6 +18,10 @@ This code manage the one-to-many association field popup
 
 {% autoescape false %}
 
+{% if subclass is not defined %}
+{% set subclass = "" %}
+{% endif %}
+
 <!-- edit one association -->
 
 <script type="text/javascript">

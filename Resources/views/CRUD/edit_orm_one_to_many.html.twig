@@ -123,7 +123,7 @@ file that was distributed with this source code.
 
             {% if sonata_admin.field_description.associationadmin.hasroute('create') and sonata_admin.field_description.associationadmin.isGranted('CREATE') and btn_add %}
                 <span id="field_actions_{{ id }}" >
-                    {% if sonata_admin.field_description.associationadmin is empty %}
+                    {% if sonata_admin.field_description.associationadmin.subClasses is empty %}
                     <a
                         href="{{ sonata_admin.field_description.associationadmin.generateUrl('create', sonata_admin.field_description.getOption('link_parameters', {})) }}"
                         onclick="return start_field_retrieve_{{ id }}(this);"
